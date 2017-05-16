@@ -2,7 +2,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import random as rd
 import numpy as np
-import scipy as scp
 
 #Create weighted graph
 def create_weighted_random_graph(n_nodes, n_edges, weights_from, weights_to, time_slot_size):

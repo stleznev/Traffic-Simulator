@@ -1,0 +1,13 @@
+#No txt files
+*.txt
+*.ipynb
+*.png
+
+#Ignore all the files in figures directory
+/Figures
+
+#Ignore all the files in pycache directory
+/pycache
+
+#Ignore all the files in .ipynb_checkpoints directory
+/.ipynb_checkpoints

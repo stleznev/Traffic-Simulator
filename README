@@ -1,0 +1,11 @@
+Traffic Simulator
+
+To work with this project some packages are necessary: scikitlearn, networkx, numpy, matplotlib.
+
+First of all is the Initialize_graph.py file, it contains functions to generate random graph and to draw it using networkx and matplotlib.
+
+Then there is Initialize_agents.py which contains the «Agent» class and the function to create some arbitrary amount of agents in a list.
+
+The main feature is the Simulation_loop_copy.py, it contains the main classes such as «Simulation_baseline», which essentially make the traffic simulation happen.
+
+The file «dijkstra_copy» is there temporarily to store some helpful functions used by simulation classes.

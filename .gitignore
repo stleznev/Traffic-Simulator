@@ -1,6 +1,5 @@
 #No txt files
 *.txt
-*.ipynb
 *.png
 
 #Ignore all the files in figures directory

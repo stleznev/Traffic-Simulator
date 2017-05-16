@@ -8,4 +8,4 @@ Then there is Initialize_agents.py which contains the «Agent» class and the fu
 
 The main feature is the Simulation_loop_copy.py, it contains the main classes such as «Simulation_baseline», which essentially make the traffic simulation happen.
 
-The file «dijkstra_copy» is there temporarily to store some helpful functions used by simulation classes.
+The file dijkstra_copy.py is there temporarily to store some helpful functions used by simulation classes.

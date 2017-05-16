@@ -7,7 +7,7 @@
 /Figures
 
 #Ignore all the files in pycache directory
-/pycache
+/__pycache__
 
 #Ignore all the files in .ipynb_checkpoints directory
 /.ipynb_checkpoints

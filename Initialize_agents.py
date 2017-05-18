@@ -94,8 +94,8 @@ class Agent(object):
                 self.times_of_departures[i] = float((
                     "{0:." + str(self.digits_to_round) + "f}").format(
                     round((self.times_of_departures[0] 
-                        + i*(last_dep-first_dep)/(self.num_trips-1)), 
-                        self.digits_to_round)))
+                           + i*(last_dep-first_dep)/(self.num_trips-1)), 
+                           self.digits_to_round)))
 
         del first_dep
         del last_dep
@@ -151,7 +151,6 @@ class Agent(object):
                 self.current_path = 0
                 self.current_edge_num = []
 
-
     # Fucntion that restores agent to his pre-simulation state.
     def restore(self, finish=False):
         self.speed = 60
@@ -184,8 +183,6 @@ def create_list_of_agents(num_agents, graph, time_stamp,
                             navi_user_prob = navi_user_prob, 
                             PTA_user_prob = PTA_user_prob))
     return agents
-
-
 
 
 

@@ -568,7 +568,7 @@ class simulation_baseline(object):
         # Test for consistency in simulation 
         # (number of cars came to edge must be equal to 
         # number of cars left the edge).
-        if (edge_name_came == edge_name_left) is False:
+        if not (edge_name_came == edge_name_left):
             print('Equality violated')
             print('Came', edge_name_came)
             print('Left', edge_name_left)
@@ -696,7 +696,7 @@ class simulation_navigator(simulation_baseline):
 
         prop_proxy = 0
         for agent in self.agents:
-            if agent.navigator_user is True:
+            if agent.navigator_user:
                 prop_proxy += 1
 
         self.proportion_users = prop_proxy / len(self.agents)
@@ -709,10 +709,10 @@ class simulation_navigator(simulation_baseline):
             update_list = []
             num_navi_agents = 0
             for agent in edge_list:
-                if agent.navigator_user is True:
+                if agent.navigator_user:
                     num_navi_agents += 1
             for agent in edge_list:
-                if agent.navigator_user is True:
+                if agent.navigator_user:
                     passed_distance = self.calculate_passed_distance(
                                                     agent=agent,
                                                     current_time=current_time)
@@ -745,7 +745,7 @@ class simulation_navigator(simulation_baseline):
             # Expected edge time is a time in which agent expects to
             # finish traversing the edge. Expected times are different
             # for those who use navigator and those who don't.
-            if agent.navigator_user is True:
+            if agent.navigator_user:
                 time = agent.times_of_departures[path_num]
                 edge = (agent.paths[path_num][edge_num], 
                         agent.paths[path_num][edge_num+1])
@@ -768,7 +768,7 @@ class simulation_navigator(simulation_baseline):
             agent.real_edge_times[path_num].append(list((time, None)))
         
         else:
-            if agent.navigator_user is True:
+            if agent.navigator_user:
                 time = agent.expected_edge_times[path_num][edge_num-1][1]
                 edge = (agent.paths[path_num][edge_num], 
                         agent.paths[path_num][edge_num+1])
@@ -966,7 +966,7 @@ class simulation_navigator(simulation_baseline):
                     # agent finds the path from source to target.
                     if (a.times_of_departures[path_num] == t and 
                         a.paths[path_num] is None and a.current_edge == (0,0)):
-                        if a.navigator_user is True:
+                        if a.navigator_user:
                             a.paths[path_num] = nx.dijkstra_path(
                                                 G=self.graph, 
                                                 source=a.start_nodes[path_num], 
@@ -1092,7 +1092,7 @@ class simulation_navigator(simulation_baseline):
         # Test for consistency in simulation 
         # (number of cars came to edge must be equal to 
         # number of cars left the edge).
-        if (edge_name_came == edge_name_left) is False:
+        if not (edge_name_came == edge_name_left):
             print('Equality violated')
             print('Came', edge_name_came)
             print('Left', edge_name_left)
@@ -1194,14 +1194,14 @@ class simulation_navigator(simulation_baseline):
 
         counter = 0
         for a in self.agents:
-            if a.navigator_user is True:
+            if a.navigator_user:
                 counter +=1 
         del a
         proportion_users = counter / len(self.agents)
         
         statistics_available = deepcopy(self.statistics[0])
         for agent in statistics_available:
-            if agent.navigator_user is False:
+            if not agent.navigator_user:
                 statistics_available.remove(agent)
         del agent
 
@@ -1250,7 +1250,7 @@ class simulation_PTA(simulation_baseline):
         
         prop_proxy = 0
         for agent in self.agents:
-            if agent.PTA_user is True:
+            if agent.PTA_user:
                 prop_proxy += 1
 
         self.proportion_users = prop_proxy / len(self.agents)
@@ -1377,7 +1377,7 @@ class simulation_PTA(simulation_baseline):
             # Expected edge time is a time in which agent expects to
             # finish traversing the edge. Expected times are different
             # for those who use navigator and for those who don't.
-            if agent.PTA_user is True:
+            if agent.PTA_user:
                 time = agent.times_of_departures[path_num]
                 edge = (agent.paths[path_num][edge_num], 
                         agent.paths[path_num][edge_num+1])
@@ -1414,7 +1414,7 @@ class simulation_PTA(simulation_baseline):
             agent.real_edge_times[path_num].append(list((time, None)))
         
         else:
-            if agent.PTA_user is True:
+            if agent.PTA_user:
                 time = agent.expected_edge_times[path_num][edge_num-1][1]
                 edge = (agent.paths[path_num][edge_num],
                         agent.paths[path_num][edge_num+1])
@@ -1494,9 +1494,9 @@ class simulation_PTA(simulation_baseline):
             min_node = min_val_node[1]
             
             if min_node == target-1:
-                if length is True:
+                if length:
                     return dist[min_node]
-                if length is False:
+                if not length:
                     return get_path(list_of_previous_nodes=prev, 
                                     target=target-1)
             
@@ -1674,7 +1674,7 @@ class simulation_PTA(simulation_baseline):
                     # agent finds the path from source to target.
                     if (a.times_of_departures[path_num] == t and 
                         a.paths[path_num] is None and a.current_edge == (0,0)):
-                        if a.PTA_user is True:
+                        if a.PTA_user:
                             a.paths[path_num] = self.dijkstra_PTA(
                                                 source=a.start_nodes[path_num], 
                                                 target=a.finish_nodes[path_num], 
@@ -1797,7 +1797,7 @@ class simulation_PTA(simulation_baseline):
         # Test for consistency in simulation 
         # (number of cars came to edge must be equal to 
         # number of cars left the edge).
-        if (edge_name_came == edge_name_left) is False:
+        if not (edge_name_came == edge_name_left):
             print('Equality violated')
             print('Came', edge_name_came)
             print('Left', edge_name_left)
@@ -2103,9 +2103,9 @@ class dynamic_system(simulation_baseline):
             min_node = min_val_node[1]
             
             if min_node == target-1:
-                if length is True:
+                if length:
                     return dist[min_node]
-                if length is False:
+                if not length:
                     return get_path(list_of_previous_nodes=prev, 
                                     target=target-1)
             
@@ -2141,7 +2141,7 @@ class dynamic_system(simulation_baseline):
             + (self.calculate_discounted_trust(agent=agent, 
                                                path_num=path_num, 
                                                method='baseline' )*60)
-        if self.all_three is True:
+        if self.all_three:
             PTA_path_len = \
             self.dijkstra_PTA(source=agent.start_nodes[path_num], 
                               target=agent.finish_nodes[path_num], 
@@ -2150,7 +2150,7 @@ class dynamic_system(simulation_baseline):
                 + (self.calculate_discounted_trust(agent=agent, 
                                                 path_num=path_num, 
                                                 method='PTA')*60)
-        elif self.all_three is False:
+        elif not self.all_three:
             PTA_path_len = float('inf')
 
         navigator_path_len = \
@@ -2660,7 +2660,7 @@ class dynamic_system(simulation_baseline):
         # Test for consistency in simulation 
         # (number of cars came to edge must be equal to 
         # number of cars left the edge).
-        if (edge_name_came == edge_name_left) is False:
+        if not (edge_name_came == edge_name_left):
             print('Equality violated')
             print('Came', edge_name_came)
             print('Left', edge_name_left)

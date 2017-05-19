@@ -197,9 +197,9 @@ def dijkstra_with_time_dependent_weights(graph, source, target, agent,
         min_node = min_val_node[1]
         
         if min_node == target-1:
-            if length == True:
+            if length:
                 return dist[min_node]
-            if length == False:
+            if not length:
                 return get_path(list_of_previous_nodes=prev, 
                                 target=target-1)
         

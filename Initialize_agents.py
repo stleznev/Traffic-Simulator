@@ -167,7 +167,6 @@ class Agent(object):
         self.current_iter += 1
 
         if finish:
-        #if finish == True:
             self.current_iter = 0
 
 

@@ -113,8 +113,6 @@ def check_expectations(simulation):
                           'Trav exp', round(trav_time_exp, 2))
 
 
-# Function that compares reality of the travel times on
-# each edge of agents' paths to the least possible time needed to traverse it
 def check_reality(simulation):
     """Function that compares agents' real travel times
     on each edge of their path to the least possible time 
@@ -141,8 +139,6 @@ def check_reality(simulation):
                           'Trav real', round(trav_time_real, 2))
 
 
-# FIFO property check
-# Takes a lot of time, run only if necessary
 def check_FIFO_property_PTA(simulation):
     """The FIFO propert means that any agent cannot traverse 
     edge faster by coming later. 
@@ -179,7 +175,5 @@ def check_FIFO_property_PTA(simulation):
                 print('FIFO is not satisfied')
                 print('ID',a.id_num,'Path', p, 'Edge', edge, 'Time', t)
                 break
-
-
 
 

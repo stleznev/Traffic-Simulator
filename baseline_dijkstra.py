@@ -50,8 +50,8 @@ def calculate_subjective_weight_for_edge_time(graph, agent, time,
             #If agent arrived on the edge earlier or at time = t.
             if time >= time_interval_a and time <= time_interval_b:
                 #Finding latest speed with which agent was going.
-                for (time_dict, speed_dict in 
-                    statistics[iteration][agent.id_num].speed_by_time.items()):
+                for time_dict, speed_dict in \
+                    statistics[iteration][agent.id_num].speed_by_time.items():
                     if time_dict >= time_interval_a and time_dict <= time:
                         current_speed = speed_dict
                     if time_dict > time:
@@ -62,8 +62,8 @@ def calculate_subjective_weight_for_edge_time(graph, agent, time,
                 # Get the list of adjustments for speed.
                 speed_preserver = [current_speed]
                 time_preserver = [time]
-                for (time_dict, speed_dict in 
-                    statistics[iteration][agent.id_num].speed_by_time.items()):
+                for time_dict, speed_dict in \
+                    statistics[iteration][agent.id_num].speed_by_time.items():
                     if time_dict > time and time_dict < time_interval_b:
                         time_preserver.append(time_dict)
                         speed_preserver.append(speed_dict)
@@ -74,7 +74,7 @@ def calculate_subjective_weight_for_edge_time(graph, agent, time,
                 # has had before leaving the edge previously.
                 objective_weight = 0
                 subjective_weight = 0
-                for tp in range(1,len(time_preserver)):     
+                for tp in range(1, len(time_preserver)):     
                     objective_weight += ((time_preserver[tp] 
                                          - time_preserver[tp-1])
                                          * speed_preserver[tp-1])
@@ -90,11 +90,11 @@ def calculate_subjective_weight_for_edge_time(graph, agent, time,
             if time > time_interval_b:
                 continue
 
-            if (time < time_interval_a 
-                and (time + real_weight/60) <= time_interval_a):
+            if (time < time_interval_a
+            and (time + real_weight/60) <= time_interval_a):
                 continue
 
-            if (time < time_interval_a 
+            if (time < time_interval_a
                 and (time + real_weight/60) > time_interval_a):
 
                 # Calculate distance agent would pass on 
@@ -104,8 +104,8 @@ def calculate_subjective_weight_for_edge_time(graph, agent, time,
                 
                 # Calculating current speed when agent suddenly 
                 # remembers the speed on this edge.
-                for (time_dict, speed_dict in 
-                    statistics[iteration][agent.id_num].speed_by_time.items()):
+                for time_dict, speed_dict in \
+                    statistics[iteration][agent.id_num].speed_by_time.items():
                     if time_dict == time_interval_a:
                         current_speed = speed_dict
                         break
@@ -113,8 +113,8 @@ def calculate_subjective_weight_for_edge_time(graph, agent, time,
                 # Get the list of adjustments for speed.
                 speed_preserver = [current_speed]
                 time_preserver = [time_interval_a]
-                for (time_dict, speed_dict in 
-                    statistics[iteration][agent.id_num].speed_by_time.items()):
+                for time_dict, speed_dict in \
+                    statistics[iteration][agent.id_num].speed_by_time.items():
                     if time_dict >= time_interval_a and time_dict < time_interval_b:
                         time_preserver.append(time_dict)
                         speed_preserver.append(speed_dict)
@@ -125,7 +125,7 @@ def calculate_subjective_weight_for_edge_time(graph, agent, time,
                 # weights agent now has.
                 objective_weight = float(dist_passed)
                 subjective_weight = float(dist_passed)
-                for tp in range(1,len(time_preserver)):
+                for tp in range(1, len(time_preserver)):
                     if objective_weight >= real_weight:
                         break
                     objective_weight += ((time_preserver[tp] 
@@ -223,7 +223,7 @@ def dijkstra_with_time_dependent_weights(graph, source, target, agent,
                 prev[vertex] = min_node
 
 
-# Function that finds path from dijkstra algorithm.
+# Function that reconstructs optimal path from dijkstra algorithm.
 def get_path(list_of_previous_nodes, target):
 
     path = []
@@ -238,7 +238,7 @@ def get_path(list_of_previous_nodes, target):
     return path
 
 
-# Function that outputs the weights for some number of periods.
+# Function that outputs discounted weights for some number of periods.
 def get_discount(number, discount_rate = 0.1):
     discount = [0]
     div_element = 1

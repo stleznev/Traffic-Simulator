@@ -1,18 +1,16 @@
-#File that contains the class simulation
 import time
 from collections import OrderedDict
 from copy import deepcopy
-from dijkstra_copy import \
-calculate_subjective_weight_for_edge_time_overall, \
-find_index_2_levels, get_path, \
-dijkstra_with_time_dependent_weights, \
-get_discount
+from heapq import heapify, heappush, heappop
+
+from sklearn.ensemble import AdaBoostRegressor
 import networkx as nx
 import numpy as np
-#from sklearn import linear_model
-from sklearn.ensemble import AdaBoostRegressor
-#from sklearn.preprocessing import PolynomialFeatures
-from heapq import heapify, heappush, heappop
+
+from baseline_dijkstra import find_index_2_levels, get_path, get_discount
+from baseline_dijkstra import calculate_subjective_weight_for_edge_time_overall
+from baseline_dijkstra import dijkstra_with_time_dependent_weights
+
 
 class Simulation(object):
 	def __init__(self, graph, agents, max_time, number_of_iterations = 1):

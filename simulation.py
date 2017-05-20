@@ -1245,7 +1245,7 @@ class simulation_PTA(simulation_baseline):
         self.max_speed = 60
 
         self.trips_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(max_time / 0.01) + 1))) \
+            for t in range(0, int(max_time / self.agents[0].time_stamp) + 1))) \
             for e in self.graph.edges())
         
         prop_proxy = 0
@@ -1260,6 +1260,7 @@ class simulation_PTA(simulation_baseline):
     # agents to the dict which has number of cars on every
     # edge at every time-momemt.
     def transform_historical_data(self):
+        time_stamp = self.agents[0].time_stamp
         max_time_val = []
         for a in self.historical_data:
             for p in range(len(a.paths)):
@@ -1269,18 +1270,18 @@ class simulation_PTA(simulation_baseline):
         if max_time_val > self.max_time:
             self.max_time = max_time_val
             self.trips_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(self.max_time / 0.01) + 1))) \
+            for t in range(0, int(self.max_time / time_stamp) + 1))) \
             for e in self.graph.edges())
 
         self.cong_hist_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(self.max_time / 0.01) + 1))) \
+            for t in range(0, int(self.max_time / time_stamp) + 1))) \
             for e in self.graph.edges())
         
         for a in self.historical_data:
             for p in range(len(a.paths)):
                 for edge_num in range(len(a.paths[p])-1):
-                    start_time = int(round(a.real_edge_times[p][edge_num][0] / 0.01))
-                    finish_time = int(round(a.real_edge_times[p][edge_num][1] / 0.01))
+                    start_time = int(round(a.real_edge_times[p][edge_num][0] / time_stamp))
+                    finish_time = int(round(a.real_edge_times[p][edge_num][1] / time_stamp))
                     edge = a.edges_passed[p][edge_num]
                     for time in range(start_time, finish_time + 1):
                         self.cong_hist_data[edge][time][0] += 1
@@ -1330,7 +1331,7 @@ class simulation_PTA(simulation_baseline):
             
             while position == position_saved:
                 t += 1
-                if t >= int(round(self.max_time/0.01)):
+                if t >= int(round(self.max_time/time_stamp)):
                     break
                 left = round(len(self.trips_data[edge][t][1]) * self.proportion_users
                     + len(self.cong_hist_data[edge][t][1]) * (1 - self.proportion_users))
@@ -1481,12 +1482,12 @@ class simulation_PTA(simulation_baseline):
         
         adj_list = self.graph.adjacency_list()
 
-        dist = [float('inf')]*len(adj_list)
+        dist = [float('inf')] * len(adj_list)
         prev = [None]*len(adj_list)
         dist[source-1] = 0
         prev[source-1] = source - 1
 
-        dist_proxy = [(0, source - 1)]
+        dist_proxy = [(0, source-1)]
         init_time = float(time)
         
         while dist_proxy:
@@ -1624,10 +1625,12 @@ class simulation_PTA(simulation_baseline):
                                                                 current_time=t)
                                         weight_of_the_edge = \
                                         self.graph[edge_name[0]][edge_name[1]]['weight']
+                                        #############################################################
                                         distance_to_pass = float(("{0:." 
                                             + str(digits_to_save) + "f}").format(
                                                 round(weight_of_the_edge - passed_distance,
                                                 digits_to_save)))
+                                        #############################################################
 
                                         #Checking prints
                                         #print('----------------')

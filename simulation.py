@@ -1269,12 +1269,13 @@ class simulation_PTA(simulation_baseline):
         max_time_val = max(max_time_val)
         if max_time_val > self.max_time:
             self.max_time = max_time_val
-            self.trips_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(self.max_time / time_stamp) + 1))) \
-            for e in self.graph.edges())
 
         self.cong_hist_data = dict((e, dict((t, [0, []]) \
             for t in range(0, int(self.max_time / time_stamp) + 1))) \
+            for e in self.graph.edges())
+
+        self.trips_data = dict((e, dict((t, [0, []]) \
+            for t in range(0, int(self.max_time / self.agents[0].time_stamp) + 1))) \
             for e in self.graph.edges())
         
         for a in self.historical_data:
@@ -1792,6 +1793,11 @@ class simulation_PTA(simulation_baseline):
 
             if arch_time == int((self.max_time/self.agents[0].time_stamp)):
                 self.check_agents_prolong_simulation()
+                for edge in self.graph.edges():
+                    for time_diff in range(arch_time+1, self.max_time+1):
+                        self.trips_data[edge][time_diff] = [0, []]
+                        self.cong_hist_data[edge][time_diff] = [0, []]
+
                 #print(self.max_time)
         
         # Sorting speed_by_time dictionary for all agents by time.
@@ -1991,8 +1997,11 @@ class dynamic_system(simulation_baseline):
     # edge at every time-momemt.
     def transform_historical_data(self):
         self.cong_hist_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(self.max_time/0.01)+1))) \
+            for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
                 for e in self.graph.edges())
+        self.trips_data = dict((e, dict((t, [0, []]) \
+            for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
+            for e in self.graph.edges())
         for a in self.historical_data:
             for p in range(len(a.paths)):
                 for edge_num in range(len(a.paths[p])-1):
@@ -2459,6 +2468,13 @@ class dynamic_system(simulation_baseline):
                                     a.real_edge_times[path_num][edge_num][1]
                                 if edge_num == len(a.real_edge_times[path_num])-1:
                                     a.current_path += 1
+                                if edge_num == len(a.real_edge_times[path_num])-1:
+                                    a.current_path += 1
+                                    diff_real = (a.real_edge_times[path_num][edge_num][-1]
+                                        - a.real_edge_times[path_num][0][0])
+                                    diff_exp = (a.expected_edge_times[path_num][edge_num][-1]
+                                        - a.expected_edge_times[path_num][0][0])
+                                    a.diff_exp_real[path_num] = diff_real - diff_exp
 
                                 # Recalculating real travel times for 
                                 # every agent on an edge (who is not 

@@ -152,7 +152,7 @@ class Simulation(object):
 # they memorized during previous iterations
 # and also current iteration (however this makes no effect on the weights 
 # because agents memorize only congestion-time weight, not just congestion).
-class simulation_baseline(object):
+class Simulation_baseline(object):
     def __init__(self, graph, agents, max_time, number_of_iterations = 1):
         
         #Parameters initialization
@@ -680,7 +680,7 @@ class simulation_baseline(object):
                             break
 
 
-class simulation_navigator(simulation_baseline):
+class Simulation_navigator(simulation_baseline):
     def __init__(self, graph, agents, max_time, common_sense):
         simulation_baseline.__init__(self, graph, agents, 1, max_time)
 
@@ -1228,7 +1228,7 @@ class simulation_navigator(simulation_baseline):
         return congestion
 
 
-class simulation_PTA(simulation_baseline):
+class Simulation_PTA(simulation_baseline):
     def __init__(self, graph, agents, max_time, historical_data, 
                  common_sense, cars_ahead):
         simulation_baseline.__init__(self, graph, agents, 1, max_time)

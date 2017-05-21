@@ -2,6 +2,8 @@
 *.txt
 *.png
 *.ipynb
+.DS_Store
+
 
 #Ignore all the files in figures directory
 /Figures

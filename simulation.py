@@ -1914,7 +1914,7 @@ class simulation_PTA(simulation_baseline):
         return congestion
 
 
-class dynamic_system(simulation_baseline):
+class Dynamic_system(simulation_baseline):
     def __init__(self, graph, agents, max_time, historical_data, 
                  common_sense, cars_ahead, all_three=True):
         simulation_baseline.__init__(self, graph, agents, 1, max_time)

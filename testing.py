@@ -102,8 +102,8 @@ def check_expectations(simulation):
     for a in simulation.statistics[index]:
         for p in range(len(a.paths)):
             for edge_num in range(len(a.paths[p])-1):
-                trav_time_exp = a.expected_edge_times[p][edge_num][-1] 
-                                - a.expected_edge_times[p][edge_num][0]
+                trav_time_exp = (a.expected_edge_times[p][edge_num][-1] 
+                                 - a.expected_edge_times[p][edge_num][0])
                 wght = simulation.graph[a.edges_passed[p][edge_num][0]]\
                        [a.edges_passed[p][edge_num][-1]]['weight'] / 60
                 
@@ -128,8 +128,8 @@ def check_reality(simulation):
     for a in simulation.statistics[index]:
         for p in range(len(a.paths)):
             for edge_num in range(len(a.paths[p])-1):
-                trav_time_real = a.real_edge_times[p][edge_num][-1] 
-                                 - a.real_edge_times[p][edge_num][0]
+                trav_time_real = (a.real_edge_times[p][edge_num][-1] 
+                                  - a.real_edge_times[p][edge_num][0])
                 wght = simulation.graph[a.edges_passed[p][edge_num][0]]\
                        [a.edges_passed[p][edge_num][-1]]['weight'] / 60
                 

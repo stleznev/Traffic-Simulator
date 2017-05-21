@@ -1244,9 +1244,9 @@ class simulation_PTA(simulation_baseline):
             self.min_speed[edge] = min(np.array(self.cars_ahead[edge])[:,0])
         self.max_speed = 60
 
-        self.trips_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(max_time / self.agents[0].time_stamp) + 1))) \
-            for e in self.graph.edges())
+        #self.trips_data = dict((e, dict((t, [0, []]) \
+        #    for t in range(0, int(max_time/self.agents[0].time_stamp)+1))) \
+        #    for e in self.graph.edges())
         
         prop_proxy = 0
         for agent in self.agents:
@@ -1271,20 +1271,20 @@ class simulation_PTA(simulation_baseline):
             self.max_time = max_time_val
 
         self.cong_hist_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(self.max_time / time_stamp) + 1))) \
+            for t in range(0, int(self.max_time/time_stamp)+1))) \
             for e in self.graph.edges())
 
         self.trips_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(self.max_time / self.agents[0].time_stamp) + 1))) \
+            for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
             for e in self.graph.edges())
         
         for a in self.historical_data:
             for p in range(len(a.paths)):
                 for edge_num in range(len(a.paths[p])-1):
-                    start_time = int(round(a.real_edge_times[p][edge_num][0] / time_stamp))
-                    finish_time = int(round(a.real_edge_times[p][edge_num][1] / time_stamp))
+                    start_time = int(round(a.real_edge_times[p][edge_num][0]/time_stamp))
+                    finish_time = int(round(a.real_edge_times[p][edge_num][1]/time_stamp))
                     edge = a.edges_passed[p][edge_num]
-                    for time in range(start_time, finish_time + 1):
+                    for time in range(start_time, finish_time+1):
                         self.cong_hist_data[edge][time][0] += 1
                         # If agent leaves the edge at time = t
                         # than it is indicated.
@@ -1311,7 +1311,7 @@ class simulation_PTA(simulation_baseline):
         except KeyError:
             for time_proxy in range(len(self.trips_data[edge]), t+1):
                 self.cong_hist_data[edge][time_proxy] = [0, []]
-                self.cong_hist_data[edge][time_proxy] = [0, []]
+                self.trips_data[edge][time_proxy] = [0, []]
             position = round((self.trips_data[edge][t][0] * self.proportion_users)
                 + (self.cong_hist_data[edge][t][0] * (1-self.proportion_users)))
             left = round(len(self.trips_data[edge][t][1]) * self.proportion_users
@@ -1528,6 +1528,10 @@ class simulation_PTA(simulation_baseline):
         agents_on_edges = dict((e,[]) for e in self.graph.edges())
         edge_name_came = dict((e, 0) for e in self.graph.edges())
         edge_name_left = dict((e, 0) for e in self.graph.edges())
+
+        self.trips_data = dict((e, dict((t, [0, []]) \
+        for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
+        for e in self.graph.edges())
 
         # Main Loop that makes each iteration of the loop tick with 
         # the time interval specified by time_stamp.
@@ -1794,7 +1798,8 @@ class simulation_PTA(simulation_baseline):
             if arch_time == int((self.max_time/self.agents[0].time_stamp)):
                 self.check_agents_prolong_simulation()
                 for edge in self.graph.edges():
-                    for time_diff in range(arch_time+1, self.max_time+1):
+                    for time_diff in range(int((arch_time+1)/0.01), 
+                                           int((self.max_time+1)/0.01)):
                         self.trips_data[edge][time_diff] = [0, []]
                         self.cong_hist_data[edge][time_diff] = [0, []]
 
@@ -1843,9 +1848,12 @@ class simulation_PTA(simulation_baseline):
             self.iteration = len(self.common_sense)
             for iteration in range(self.number_of_iterations):
                 start = time.time()
-                if iteration >= 1:
-                    self.historical_data = self.common_sense[self.iteration-1]
-                    self.transform_historical_data()
+                #self.trips_data = dict((e, dict((t, [0, []]) \
+                #for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
+                #for e in self.graph.edges())
+                #if iteration >= 1:
+                    #self.historical_data = self.common_sense[self.iteration-1]
+                    #self.transform_historical_data()
                 self.common_sense[self.iteration] = self.copy_agents()
                 self.simulation_iteration_PTA()
                 self.common_sense[self.iteration] = self.copy_agents()

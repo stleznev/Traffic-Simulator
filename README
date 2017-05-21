@@ -9,3 +9,5 @@ Then there is initialize_agents.py which contains the «Agent» class and the fu
 The main feature is the simulation.py, it contains the main classes such as «Simulation_baseline», which essentially make the traffic simulation happen.
 
 The file baseline_dijkstra.py is there temporarily to store some helpful functions used by simulation classes.
+
+The file testing.py contains some tests to ensure the correctness of (any) simulation execution.

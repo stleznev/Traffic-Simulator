@@ -39,8 +39,8 @@ def check_paths_and_travel_times(simulation):
                             print('-----------------------------------------')
                             print('Error in times of departures: Iter', iteration)
                             print('ID', a.id_num, 'Path', path_num)
-                    else:
-                        pass
+                else:
+                    pass
 
 
 def check_FIFO_property_baseline(simulation):

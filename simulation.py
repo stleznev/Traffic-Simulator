@@ -476,7 +476,8 @@ class simulation_baseline(object):
                                 if (a.expected_edge_times[path_num][-1][-1]
                                     >= a.times_of_departures[path_num+i]):
                                     a.times_of_departures[path_num+i] = \
-                                    float(a.expected_edge_times[path_num][-1][-1]) + 0.01*i
+                                    (float(a.expected_edge_times[path_num][-1][-1])
+                                     + self.agents[0].time_stamp*i)
                                     a.times_of_departures[path_num+i] = \
                                     float(("{0:." + str(len(str(self.agents[0].time_stamp))-2) 
                                         + "f}").format(round(a.times_of_departures[path_num+i], 
@@ -548,7 +549,8 @@ class simulation_baseline(object):
                                     if (a.real_edge_times[path_num][edge_num][-1] 
                                         >= a.times_of_departures[path_num+i]):
                                         a.times_of_departures[path_num+i] = \
-                                        a.real_edge_times[path_num][edge_num][-1] + 0.01*i
+                                        (a.real_edge_times[path_num][edge_num][-1]
+                                         + self.agents[0].time_stamp*i)
                                         a.times_of_departures[path_num+i] = \
                                         float(("{0:." + str(len(str(self.agents[0].time_stamp))-2) \
                                             + "f}").format(round(a.times_of_departures[path_num+i], 
@@ -664,7 +666,7 @@ class simulation_baseline(object):
     def check_agents_prolong_simulation(self):
         for a in self.agents:
             for path_num in range(len(a.paths)):
-                if a.paths[path_num] == None:
+                if a.paths[path_num] is None:
                     if self.max_time < a.times_of_departures[path_num]:
                         self.max_time = a.times_of_departures[path_num]
                         #print('Changed max_time', self.max_time)
@@ -999,7 +1001,8 @@ class simulation_navigator(simulation_baseline):
                                 if (a.expected_edge_times[path_num][-1][-1] 
                                     >= a.times_of_departures[path_num+i]):
                                     a.times_of_departures[path_num+i] = \
-                                    float(a.expected_edge_times[path_num][-1][-1]) + 0.01*i
+                                    (float(a.expected_edge_times[path_num][-1][-1]) 
+                                     + self.agents[0].time_stamp*i)
                                     a.times_of_departures[path_num+i] = \
                                     float(("{0:." + str(len(str(self.agents[0].time_stamp))-2) 
                                         + "f}").format(round(a.times_of_departures[path_num+i], 
@@ -1073,7 +1076,8 @@ class simulation_navigator(simulation_baseline):
                                     if (a.real_edge_times[path_num][edge_num][-1] 
                                         >= a.times_of_departures[path_num+i]):
                                         a.times_of_departures[path_num+i] = \
-                                        a.real_edge_times[path_num][edge_num][-1] + 0.01*i
+                                        (a.real_edge_times[path_num][edge_num][-1]
+                                         + self.agents[0].time_stamp*i)
                                         a.times_of_departures[path_num+i] = \
                                         float(("{0:." + str(len(str(self.agents[0].time_stamp))-2) \
                                             + "f}").format(round(a.times_of_departures[path_num+i], 
@@ -1630,12 +1634,10 @@ class simulation_PTA(simulation_baseline):
                                                                 current_time=t)
                                         weight_of_the_edge = \
                                         self.graph[edge_name[0]][edge_name[1]]['weight']
-                                        #############################################################
                                         distance_to_pass = float(("{0:." 
                                             + str(digits_to_save) + "f}").format(
                                                 round(weight_of_the_edge - passed_distance,
                                                 digits_to_save)))
-                                        #############################################################
 
                                         #Checking prints
                                         #print('----------------')
@@ -1715,7 +1717,8 @@ class simulation_PTA(simulation_baseline):
                                 if (a.expected_edge_times[path_num][-1][-1] 
                                     >= a.times_of_departures[path_num + i]):
                                     a.times_of_departures[path_num+i] = \
-                                    float(a.expected_edge_times[path_num][-1][-1]) + 0.01 * i
+                                    (float(a.expected_edge_times[path_num][-1][-1])
+                                     + self.agents[0].time_stamp*i)
                                     a.times_of_departures[path_num+i] = \
                                     float(("{0:." + str(len(str(self.agents[0].time_stamp)) - 2) 
                                         + "f}").format(round(
@@ -1785,9 +1788,10 @@ class simulation_PTA(simulation_baseline):
                                     if (a.real_edge_times[path_num][edge_num][-1] 
                                         >= a.times_of_departures[path_num+i]):
                                         a.times_of_departures[path_num+i] = \
-                                        a.real_edge_times[path_num][edge_num][-1] + 0.01*i
+                                        (a.real_edge_times[path_num][edge_num][-1]
+                                         + self.agents[0].time_stamp*i)
                                         a.times_of_departures[path_num+i] = \
-                                        float(("{0:." + str(len(str(self.agents[0].time_stamp))-2) \
+                                        float(("{0:." + str(len(str(self.agents[0].time_stamp))-2)
                                             + "f}").format(round(a.times_of_departures[path_num+i], 
                                                 digits_to_save)))
 
@@ -1798,12 +1802,10 @@ class simulation_PTA(simulation_baseline):
             if arch_time == int((self.max_time/self.agents[0].time_stamp)):
                 self.check_agents_prolong_simulation()
                 for edge in self.graph.edges():
-                    for time_diff in range(int((arch_time+1)/0.01), 
-                                           int((self.max_time+1)/0.01)):
+                    for time_diff in range(int((arch_time+1)/self.agents[0].time_stamp), 
+                                           int((self.max_time+1)/self.agents[0].time_stamp)):
                         self.trips_data[edge][time_diff] = [0, []]
                         self.cong_hist_data[edge][time_diff] = [0, []]
-
-                #print(self.max_time)
         
         # Sorting speed_by_time dictionary for all agents by time.
         self.sort_speed_by_time_for_all()
@@ -1935,7 +1937,7 @@ class dynamic_system(simulation_baseline):
         self.max_speed = 60
 
         self.trips_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(max_time/0.01)+1))) \
+            for t in range(0, int(max_time/self.agents[0].time_stamp)+1)))
             for e in self.graph.edges())
         self.choice_changed = dict()
 
@@ -2004,27 +2006,40 @@ class dynamic_system(simulation_baseline):
     # agents to the dict which has number of cars on every
     # edge at every time-momemt.
     def transform_historical_data(self):
+        time_stamp = self.agents[0].time_stamp
+        max_time_val = []
+        for a in self.historical_data:
+            for p in range(len(a.paths)):
+                finish_time = a.real_edge_times[p][-1][-1]
+                max_time_val.append(finish_time)
+        max_time_val = max(max_time_val)
+        if max_time_val > self.max_time:
+            self.max_time = max_time_val
+
         self.cong_hist_data = dict((e, dict((t, [0, []]) \
-            for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
-                for e in self.graph.edges())
+            for t in range(0, int(self.max_time/time_stamp)+1))) \
+            for e in self.graph.edges())
+
         self.trips_data = dict((e, dict((t, [0, []]) \
             for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
             for e in self.graph.edges())
+        
         for a in self.historical_data:
             for p in range(len(a.paths)):
                 for edge_num in range(len(a.paths[p])-1):
-                    start_time = int(round(a.real_edge_times[p][edge_num][0]/0.01))
-                    finish_time = int(round(a.real_edge_times[p][edge_num][1]/0.01))
+                    start_time = int(round(a.real_edge_times[p][edge_num][0]/time_stamp))
+                    finish_time = int(round(a.real_edge_times[p][edge_num][1]/time_stamp))
                     edge = a.edges_passed[p][edge_num]
                     for time in range(start_time, finish_time+1):
                         self.cong_hist_data[edge][time][0] += 1
-                        # If agent leaves the edge at time = t 
+                        # If agent leaves the edge at time = t
                         # than it is indicated.
                         if time == finish_time:
                             self.cong_hist_data[edge][time][1].append('l')
 
-    # Function that calculates the subjective weight for given
-    # edge and time of arrival using the data available for PTA server.
+    # Function that calculates the subjective weight for 
+    # given edge and time of arrival using the data available
+    # for PTA server.
     def calculate_weight_for_edge_time_diff(self, arrival_time, edge):
         min_speed = self.min_speed[edge]
         max_speed = 60
@@ -2042,7 +2057,7 @@ class dynamic_system(simulation_baseline):
         except KeyError:
             for time_proxy in range(len(self.trips_data[edge]), t+1):
                 self.cong_hist_data[edge][time_proxy] = [0, []]
-                self.cong_hist_data[edge][time_proxy] = [0, []]
+                self.trips_data[edge][time_proxy] = [0, []]
             position = round((self.trips_data[edge][t][0] * self.proportion_users)
                 + (self.cong_hist_data[edge][t][0] * (1-self.proportion_users)))
             left = round(len(self.trips_data[edge][t][1]) * self.proportion_users
@@ -2063,10 +2078,10 @@ class dynamic_system(simulation_baseline):
             
             while position == position_saved:
                 t += 1
-                if t >= int(round(self.max_time/0.01)):
+                if t >= int(round(self.max_time/time_stamp)):
                     break
                 left = round(len(self.trips_data[edge][t][1]) * self.proportion_users
-                    + len(self.cong_hist_data[edge][t][1]) * (1-self.proportion_users))
+                    + len(self.cong_hist_data[edge][t][1]) * (1 - self.proportion_users))
                 position -= left
                 if position <= 0:
                     position = 0
@@ -2094,7 +2109,6 @@ class dynamic_system(simulation_baseline):
             weight_obj -= diff
             weight_subj -= time_diff * 60
             return round(float(weight_subj), len(str(time_stamp))-2)
-        
         if weight_obj <= self.graph[edge[0]][edge[1]]['weight']:
             weight_obj = self.graph[edge[0]][edge[1]]['weight']
             weight_subj = self.graph[edge[0]][edge[1]]['weight']
@@ -2110,12 +2124,12 @@ class dynamic_system(simulation_baseline):
         
         adj_list = self.graph.adjacency_list()
 
-        dist = [float('inf')]*len(adj_list)
+        dist = [float('inf')] * len(adj_list)
         prev = [None]*len(adj_list)
         dist[source-1] = 0
         prev[source-1] = source - 1
 
-        dist_proxy = [(0, source - 1)]
+        dist_proxy = [(0, source-1)]
         init_time = float(time)
         
         while dist_proxy:
@@ -2145,6 +2159,8 @@ class dynamic_system(simulation_baseline):
                     heappush(dist_proxy, (dist[vertex], vertex))
                     prev[vertex] = min_node
 
+    # Function that assigns the path method (aseline, navigator, PTA)
+    # to agent's path.
     def choose_type_of_path(self, agent, path_num, t):
         # Count the lengths of all 3 available options 
         # and subtract the percieved distrust (measured in 
@@ -2417,6 +2433,10 @@ class dynamic_system(simulation_baseline):
         edge_name_came = dict((e, 0) for e in self.graph.edges())
         edge_name_left = dict((e, 0) for e in self.graph.edges())
 
+        self.trips_data = dict((e, dict((t, [0, []]) \
+        for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1)))
+        for e in self.graph.edges())
+
         # Main Loop that makes each iteration of the loop tick with 
         # the time interval specified by time_stamp.
         arch_time = -1
@@ -2474,8 +2494,6 @@ class dynamic_system(simulation_baseline):
                                 if edge_num <= (len(a.real_edge_times[path_num])-2):
                                     a.real_edge_times[path_num][edge_num+1][0] = \
                                     a.real_edge_times[path_num][edge_num][1]
-                                if edge_num == len(a.real_edge_times[path_num])-1:
-                                    a.current_path += 1
                                 if edge_num == len(a.real_edge_times[path_num])-1:
                                     a.current_path += 1
                                     diff_real = (a.real_edge_times[path_num][edge_num][-1]
@@ -2597,7 +2615,8 @@ class dynamic_system(simulation_baseline):
                                 if (a.expected_edge_times[path_num][-1][-1]
                                     >= a.times_of_departures[path_num+i]):
                                     a.times_of_departures[path_num+i] = \
-                                    float(a.expected_edge_times[path_num][-1][-1]) + 0.01*i
+                                    (float(a.expected_edge_times[path_num][-1][-1])
+                                     + self.agents[0].time_stamp*i)
                                     a.times_of_departures[path_num+i] = \
                                     float(("{0:." + str(len(str(self.agents[0].time_stamp))-2) 
                                         + "f}").format(round(a.times_of_departures[path_num+i], 
@@ -2667,9 +2686,10 @@ class dynamic_system(simulation_baseline):
                                     if (a.real_edge_times[path_num][edge_num][-1] 
                                         >= a.times_of_departures[path_num+i]):
                                         a.times_of_departures[path_num+i] = \
-                                        a.real_edge_times[path_num][edge_num][-1] + 0.01*i
+                                        (a.real_edge_times[path_num][edge_num][-1]
+                                         + self.agents[0].time_stamp*i)
                                         a.times_of_departures[path_num+i] = \
-                                        float(("{0:." + str(len(str(self.agents[0].time_stamp))-2) \
+                                        float(("{0:." + str(len(str(self.agents[0].time_stamp))-2)
                                             + "f}").format(round(a.times_of_departures[path_num+i], 
                                                 digits_to_save)))
 
@@ -2679,7 +2699,11 @@ class dynamic_system(simulation_baseline):
 
             if arch_time == int((self.max_time/self.agents[0].time_stamp)):
                 self.check_agents_prolong_simulation()
-                #print(self.max_time)
+                for edge in self.graph.edges():
+                    for time_diff in range(int((arch_time+1)/self.agents[0].time_stamp), 
+                                           int((self.max_time+1)/self.agents[0].time_stamp)):
+                        self.trips_data[edge][time_diff] = [0, []]
+                        self.cong_hist_data[edge][time_diff] = [0, []]
         
         # Sorting speed_by_time dictionary for all agents by time.
         self.sort_speed_by_time_for_all()
@@ -2710,9 +2734,9 @@ class dynamic_system(simulation_baseline):
         self.iteration = len(self.common_sense)
         for iteration in range(self.number_of_iterations):
             start = time.time()
-            if iteration >= 1:
-                self.historical_data = self.common_sense[self.iteration-1]
-                self.transform_historical_data()
+            #if iteration >= 1:
+                #self.historical_data = self.common_sense[self.iteration-1]
+                #self.transform_historical_data()
             self.common_sense[self.iteration] = self.copy_agents()
             self.simulation_iteration_DS()
             self.common_sense[self.iteration] = self.copy_agents()

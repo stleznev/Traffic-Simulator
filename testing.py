@@ -70,8 +70,9 @@ def check_FIFO_property_baseline(simulation):
             for p in range(len(a.paths)):
                 for edge in a.edges_passed[p]:
                     check_list = [G[edge[0]][edge[1]]['weight']]
-                    for i in range(0, simulation.max_time*100):
-                        t = float(i/100)
+                    for i in range(0, simulation.max_time 
+                                   * (1/simulation.agents[0].time_stamp)):
+                        t = float(i/(1/simulation.agents[0].time_stamp))
                         check_list.append(
                             calculate_subjective_weight_for_edge_time(
                                           agent=a,
@@ -81,7 +82,8 @@ def check_FIFO_property_baseline(simulation):
                                           statistics=simulation.common_sense))
 
                         if (t + check_list[-1]/60 
-                            <= round(t - 0.01, 2) + check_list[-2]/60):
+                            <= round(t - simulation.agents[0].time_stamp, 2) 
+                                + check_list[-2]/60):
                             print('FIFO is not satisfied')
                             print('ID',a.id_num,'Path', p, 'Edge', edge, 'Time', t)
                             break
@@ -166,12 +168,12 @@ def check_FIFO_property_PTA(simulation):
     for edge in G.edges():
         check_list = [G[edge[0]][edge[1]]['weight']]
         for i in range(0, simulation.max_time):
-            t = float(i/100)
+            t = float(i/(1/simulation.agents[0].time_stamp))
             check_list.append(simulation.calculate_weight_for_edge_time_diff(
                                                             arrival_time = t,
                                                             edge = edge))
             if (t + check_list[-1]/60 
-                <= round(t - 0.01, 2) + check_list[-2]/60):
+                <= round(t - simulation.agents[0].time_stamp, 2) + check_list[-2]/60):
                 print('FIFO is not satisfied')
                 print('ID',a.id_num,'Path', p, 'Edge', edge, 'Time', t)
                 break

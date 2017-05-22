@@ -647,7 +647,7 @@ class Simulation_baseline(object):
 
         for t in range(0, int(self.max_time/self.agents[0].time_stamp)):
             idx = t
-            t = float(t/100)
+            t = float(t/(1/self.agents[0].time_stamp))
 
             for a in self.statistics[iteration]:
                 for p in range(len(a.paths)):
@@ -680,9 +680,9 @@ class Simulation_baseline(object):
                             break
 
 
-class Simulation_navigator(simulation_baseline):
+class Simulation_navigator(Simulation_baseline):
     def __init__(self, graph, agents, max_time, common_sense):
-        simulation_baseline.__init__(self, graph, agents, 1, max_time)
+        Simulation_baseline.__init__(self, graph, agents, 1, max_time)
 
         # Parameters initialization.
         self.graph = graph
@@ -1173,11 +1173,11 @@ class Simulation_navigator(simulation_baseline):
     # class initialization.
     def get_congestion_data_for_edges(self, iteration = 0):
         congestion = [dict((edge,0) for edge in self.graph.edges()) for t in \
-        range(0,int(self.max_time/self.agents[0].time_stamp))]
+        range(0, int(self.max_time/self.agents[0].time_stamp))]
 
         for t in range(0, int(self.max_time/self.agents[0].time_stamp)):
             idx = t
-            t = float(t/100)
+            t = float(t/(1/self.agents[0].time_stamp))
 
             for a in self.statistics[iteration]:
                 for p in range(len(a.paths)):
@@ -1211,7 +1211,7 @@ class Simulation_navigator(simulation_baseline):
 
         for t in range(0, int(self.max_time/self.agents[0].time_stamp)):
             idx = t
-            t = float(t/100)
+            t = float(t/(1/self.agents[0].time_stamp))
 
             for a in statistics_available:
                 for p in range(len(a.paths)):
@@ -1228,10 +1228,10 @@ class Simulation_navigator(simulation_baseline):
         return congestion
 
 
-class Simulation_PTA(simulation_baseline):
+class Simulation_PTA(Simulation_baseline):
     def __init__(self, graph, agents, max_time, historical_data, 
                  common_sense, cars_ahead):
-        simulation_baseline.__init__(self, graph, agents, 1, max_time)
+        Simulation_baseline.__init__(self, graph, agents, 1, max_time)
 
         self.graph = graph
         self.agents = agents
@@ -1533,8 +1533,8 @@ class Simulation_PTA(simulation_baseline):
         edge_name_came = dict((e, 0) for e in self.graph.edges())
         edge_name_left = dict((e, 0) for e in self.graph.edges())
 
-        self.trips_data = dict((e, dict((t, [0, []]) \
-        for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
+        self.trips_data = dict((e, dict((t, [0, []])
+        for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1)))
         for e in self.graph.edges())
 
         # Main Loop that makes each iteration of the loop tick with 
@@ -1850,12 +1850,11 @@ class Simulation_PTA(simulation_baseline):
             self.iteration = len(self.common_sense)
             for iteration in range(self.number_of_iterations):
                 start = time.time()
-                #self.trips_data = dict((e, dict((t, [0, []]) \
-                #for t in range(0, int(self.max_time/self.agents[0].time_stamp)+1))) \
-                #for e in self.graph.edges())
+                # Lines above make PTA simulation results highly unstable
+                # but help to bring it to the lower TTT
                 #if iteration >= 1:
-                    #self.historical_data = self.common_sense[self.iteration-1]
-                    #self.transform_historical_data()
+                #    self.historical_data = self.common_sense[self.iteration-1]
+                #    self.transform_historical_data()
                 self.common_sense[self.iteration] = self.copy_agents()
                 self.simulation_iteration_PTA()
                 self.common_sense[self.iteration] = self.copy_agents()
@@ -1901,7 +1900,7 @@ class Simulation_PTA(simulation_baseline):
 
         for t in range(0, int(self.max_time/self.agents[0].time_stamp)):
             idx = t
-            t = float(t/100)
+            t = float(t/(1/self.agents[0].time_stamp))
 
             for a in self.statistics[iteration]:
                 for p in range(len(a.paths)):
@@ -1914,10 +1913,10 @@ class Simulation_PTA(simulation_baseline):
         return congestion
 
 
-class Dynamic_system(simulation_baseline):
+class Dynamic_system(Simulation_baseline):
     def __init__(self, graph, agents, max_time, historical_data, 
                  common_sense, cars_ahead, all_three=True):
-        simulation_baseline.__init__(self, graph, agents, 1, max_time)
+        Simulation_baseline.__init__(self, graph, agents, 1, max_time)
 
         # Parameters initialization.
         self.graph = graph
@@ -2734,6 +2733,8 @@ class Dynamic_system(simulation_baseline):
         self.iteration = len(self.common_sense)
         for iteration in range(self.number_of_iterations):
             start = time.time()
+            # Lines above make PTA simulation results highly unstable
+            # but help to bring it to the lower TTT            
             #if iteration >= 1:
                 #self.historical_data = self.common_sense[self.iteration-1]
                 #self.transform_historical_data()
@@ -2741,10 +2742,12 @@ class Dynamic_system(simulation_baseline):
             self.simulation_iteration_DS()
             self.common_sense[self.iteration] = self.copy_agents()
             self.check_method_stability()
+            self.paths_changed_from_last_iter()
             if iteration == self.number_of_iterations - 1:
                 self.statistics[0] = self.copy_agents()
             self.restore_all_agents()
-            if self.choice_changed[self.iteration] == 0:
+            if (self.choice_changed[self.iteration] == 0 or
+            	self.paths_changed[self.iteration] == 0):
                 self.iteration += 1
                 self.number_of_iterations = self.iteration
                 print('Agents paths converged to user-equilibrium')
@@ -2809,7 +2812,17 @@ class Dynamic_system(simulation_baseline):
         else:
             pass
 
-
+    def paths_changed_from_last_iter(self):
+        if len(self.common_sense) - self.iteration >= 1:
+            self.paths_changed[self.iteration] = 0
+            for iteration in range(self.iteration, len(self.common_sense)):
+                for a in self.common_sense[iteration]:
+                    for p in range(0, len(a.paths)):
+                        if (a.paths[p] 
+                        != self.common_sense[iteration-1][a.id_num].paths[p]):
+                            self.paths_changed[iteration] += 1
+        else:
+            pass
 
 
 
